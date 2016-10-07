@@ -8,6 +8,8 @@ print "=1="
 
 # Write code that iterates over each element of lst using a for loop, printing
 # each element on a new line
+for value in lst:
+    print value
 
 print "=2="
 # 2: summing values of a list
@@ -21,17 +23,29 @@ print "=2="
 # this HW and have to use the accumulation pattern in a more creative way.
 total = 0
 # fill in the rest here
+for value in lst:
+    total += value
+print total
 
 print "=3="
 # 3: splitting strings
 # Write code that splits s into a list separate words
 # (where each word is defined to be any series of characters separated by a
 # whitespace). Print out the list using a for loop (as in (1)), one word per line.
+myList = s.split()
+for word in myList:
+    print word
 
 print "=4="
 # 4: replacing an element of a list
 # Replace the element of lst whose value is four with the value 'four' and
 # then print lst (you can do this with indexing if you like)
+index = 0
+for element in lst:
+    index = index + 1
+    if element == 4:
+        lst[index] = 'four'
+print lst
 
 print "=5="
 # 5: print out a file, verbatim
@@ -41,6 +55,10 @@ print "=5="
 # of each line, to avoid getting an extra blank line between each real line.)
 fname = "test.txt"
 # fill in the rest here
+myFile = open(fname, "r")
+for line in myFile:
+    oneLine = line.rstrip()
+    print oneLine
 
 print "=6="
 # 6: print out only items containing a certain string
@@ -52,6 +70,9 @@ print "==6a=="
 # 6a iterate over dogList. print out where in each line the string Terrier can be found
 # (if it cannot be found, print -1). hint: use find() (see supplement two)
 # Case does not matter. It should match "Terrier" or "terrier"
+for dog in dogList:
+        thisDog = dog.lower()
+        print thisDog.find("terrier")
 
 
 print "==6b=="
@@ -60,6 +81,9 @@ binList = [0,1,1,0,1,1,0]
 
 # Iterate over binList. If the current item equals 1
 # print "One". Otherwise, don't print anything.
+for number in binList:
+    if number == 1:
+        print "One"
 
 
 print "==6c=="
@@ -67,3 +91,7 @@ print "==6c=="
 # now, iterate over dogList. print out only the items that contain the string Bulldog
 # case does not matter, you should match bulldog or Bulldog
 # hint: You will need to use if. Also, find() may help.
+for dog in dogList:
+    thisDog = dog.lower()
+    if thisDog.find("bulldog") > -1:
+        print dog

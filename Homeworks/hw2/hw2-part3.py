@@ -28,14 +28,20 @@ print "----------"
 # Facebook group! Run your program work on hw2feed.txt and sherlock.txt. Take a
 # screenshot of the output when running it on hw2feed.txt
 
-fname = "test.txt"
+fname = "hw2feed.txt"
 #fname = raw_input("Please enter a file name: ")
 numChars = 0
 numLines = 0
 numWords = 0
 
 # fill in the rest here
-
+myFile = open(fname, "r")
+for line in myFile:
+    numLines = numLines + 1
+    splitted = line.split()
+    for word in splitted:
+        numWords = numWords +1
+        numChars = numChars + len(word)
 
 # output code below is provided for you; you should not edit this
 print numChars, 'characters'
