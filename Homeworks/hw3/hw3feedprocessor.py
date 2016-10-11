@@ -69,7 +69,6 @@ pc_count = {}
 f = open(fname,'r')
 
 # read in and count the total number of posts and comments for each user
-# but only print the word if it appeared 5 or more times
 
 #fill in code here
 
