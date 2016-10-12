@@ -38,7 +38,7 @@ d = {}
 for word in wordlist:
     current = word.lower()
     current = stripWordPunctuation(current)
-    d[word] = d.get(word,0)+1
+    d[current] = d.get(current,0)+1
 for dictWord in d:
     if d[dictWord] > 10:
         print dictWord, d[dictWord]
@@ -60,7 +60,7 @@ d = {}
 for word in wordlist:
     current = word.lower()
     current = stripWordPunctuation(current)
-    d[word] = d.get(word,0)+1
+    d[current] = d.get(current,0)+1
 for dictWord in d:
     if d[dictWord] > largest:
         largest = d[dictWord]
