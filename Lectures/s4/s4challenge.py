@@ -65,7 +65,7 @@ for dictWord in d:
     if d[dictWord] > largest:
         largest = d[dictWord]
         mystring = dictWord
-print dictWord, largest
+print mystring, largest
 
 # print tally
 # printing only words appearing more than 10 times
