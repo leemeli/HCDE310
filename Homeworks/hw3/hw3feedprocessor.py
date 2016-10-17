@@ -16,12 +16,18 @@ print "== part 3 =="
 # parameter and return the field type (either post, comment, or from).
 
 def fieldType(line):
-    # fill in your code here
+    firstCharacters = line[:8]
+    if firstCharacters.find("post") > -1:
+        return "post"
+    elif firstCharacters.find("comment") > -1:
+        return "comment"
+    else:
+        return "from"
 
 # You can uncomment and test your function with these lines
-#print fieldType("from: Sean")
-#print fieldType("post: Hi everyone")
-#print fieldType("comment: Thanks!")
+print fieldType("from: Sean")
+print fieldType("post: Hi everyone")
+print fieldType("comment: Thanks!")
 
 print "== part 4 =="
 # Find out and print how many posts there are
@@ -33,15 +39,22 @@ print "== part 4 =="
 #
 
 posts = 0
-comment = 0
+comments = 0
 
 fname = "hw3feed.txt"
 f = open(fname,'r')
 
 # Fill in your code here.
 
-print "Total posts: %d"%comments
-print "Total comments: %d"%posts
+for line in f:
+    currentType = fieldType(line)
+    if currentType == "post":
+        posts = posts + 1
+    elif currentType == "comment":
+        comments = comments + 1
+
+print "Total posts: %d"%posts
+print "Total comments: %d"%comments
 
 print "== part 5 =="
 ### part 5: printing users
@@ -58,6 +71,9 @@ print "== part 5 =="
 fname = "hw3feed.txt"
 f = open(fname,'r')
 #fill in code here
+for line in f:
+    if fieldType(line) == "from":
+        print line[6:]
 
 
 print "== part 6 =="
@@ -71,12 +87,21 @@ f = open(fname,'r')
 # read in and count the total number of posts and comments for each user
 
 #fill in code here
+for line in f:
+    currentType = fieldType(line)
+    currentName = ""
+    if currentType == "from": 
+        currentName = line[6:-1]
+        pc_count[currentName] = pc_count.get(currentName, 0) + 1
 
 
 # print the number of times each user posted
 
 #fill in code here
-
+keys = pc_count.keys()
+for dictElement in keys:
+    print dictElement + ": " + str(pc_count[dictElement])
+    
 
 # part 6 - Just for fun: how many unique posters were there?
 # (note this question is optional - but it's one line of code)
@@ -99,12 +124,23 @@ f = open(fname,'r')
 # read in and count of times each word appeared
 
 #fill in code here
-
+for line in f:
+    currentType = fieldType(line)
+    if currentType == "post": 
+        currentPost = line[6:-1]
+        wordList = currentPost.split()
+        for word in wordList:
+            currentWord = stripWordPunctuation(word)
+            currentWord = currentWord.lower()
+            postWordCount[currentWord] = postWordCount.get(currentWord, 0) + 1
+        
 
 # print the number of times each word appeared
 
 #fill in code here
-
+keys = postWordCount.keys()
+for dictElement in keys:
+    print dictElement + ": " + str(postWordCount[dictElement])
 
 print "== part 8 =="
 ### part 8: counting word frequency in comments and posts
@@ -123,16 +159,28 @@ print "== part 8 =="
 # to meet the requirements for this part.
 
 # uncomment and begin editing from the next line:
-#def wordFreq
+def wordFreq(fname, commentOrPost):
+    postWordCount = {}
+    f = open(fname,'r')
+    for line in f:
+        currentType = fieldType(line)
+        if currentType == commentOrPost: 
+            currentPost = line[6:-1]
+            wordList = currentPost.split()
+            for word in wordList:
+                currentWord = stripWordPunctuation(word)
+                currentWord = currentWord.lower()
+                postWordCount[currentWord] = postWordCount.get(currentWord, 0) + 1
+    return postWordCount
 
 # to test ,you can uncomment and run these  lines:
-#if wordFreq(fname,'post')["anyone"] == 9 and wordFreq(fname,'post')["eclipse"] == 5:
-#    print "Looks like wordFreq() works fine for posts"
-#else:
-#    print "We got some errors with wordFreq() for posts."
-#  
-#if wordFreq(fname,'comment')["file"] == 24 and wordFreq(fname,'comment')["if"] == 39:
-#    print "Looks like wordFreq() works fine for comments"
-#else:
-#    print "We got some errors with wordFreq() for comments."
+if wordFreq(fname,'post')["anyone"] == 9 and wordFreq(fname,'post')["eclipse"] == 5:
+    print "Looks like wordFreq() works fine for posts"
+else:
+    print "We got some errors with wordFreq() for posts."
+  
+if wordFreq(fname,'comment')["file"] == 24 and wordFreq(fname,'comment')["if"] == 39:
+    print "Looks like wordFreq() works fine for comments"
+else:
+    print "We got some errors with wordFreq() for comments."
 
