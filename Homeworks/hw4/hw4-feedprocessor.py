@@ -38,6 +38,29 @@ def isField(field_name, s):
 # define contributorCounts() here.
 # in this function, you MUST make at least one call to the function isField
 # or another function you have defined
+def contributorCounts(file_name):
+    f = open(file_name,'r')
+    dict = {}
+    currentUser = ""
+    currentType = ""
+    for line in f:
+        if isField("from", line):
+            currentUser = line[6:-1]
+        elif isField("post", line):
+            currentType = "posts"
+            dict[currentUser] = dict.get(currentUser, {})
+            dict[currentUser][currentType] = dict[currentUser].get(currentType, 0) + 1
+        elif isField("comment", line):
+            currentType = "comments"
+            dict[currentUser] = dict.get(currentUser, {})
+            dict[currentUser][currentType] = dict[currentUser].get(currentType, 0) + 1
+    return dict
+
+#My test to make sure it works
+#fname = "hw4feed.txt"
+#f = open(fname,'r')
+#print contributorCounts(f)
+
 
 
 #### printContributors() should print out the number of times each
@@ -53,6 +76,38 @@ def isField(field_name, s):
 #   counts: dictionary of contributor counts
 
 # define printContributors() here.
+def printContributors(counts):
+    for person in counts:
+        myString = person + " posted "
+        currentPerson = counts[person]
+        if currentPerson.has_key("posts") == False: #If the person never posted
+            myString = myString + "0 times and commented "
+            if currentPerson["comments"] == 1:
+                myString = myString + "once"
+            else:
+                myString = myString + str(currentPerson["comments"]) + " times"
+        elif currentPerson.has_key("comments") == False: #If the person never commented
+            if currentPerson["posts"] == 1:
+                myString = myString + "once"
+            else:
+                myString = myString + str(currentPerson["posts"]) + " times"
+            myString = myString + " and commented 0 times"
+        else: #If the person has posted and commented
+            if currentPerson["posts"] == 1:
+                myString = myString + "once"
+            else:
+                myString = myString + str(currentPerson["posts"]) + " times"
+            myString = myString + " and commented "
+            if currentPerson["comments"] == 1:
+                myString = myString + "once"
+            else:
+                myString = myString + str(currentPerson["comments"]) + " times"
+        print myString
+
+#My test to make sure it works
+#fname = "hw4feed.txt"
+#f = open(fname,'r')
+#printContributors(contributorCounts(f))
 
 #### saveContributors() should save a comma separated value (CSV) formatted
 # file where the first item is the key of a dictionary and the second item is
@@ -66,20 +121,38 @@ def isField(field_name, s):
 # name,postcount,commentcount 
 
 # define saveContributors() here.
-
+def saveContributors(counts, output_fname):
+    f=open(output_fname, 'w')
+    f.write("name, postcount, commentcount \n")
+    for person in counts:
+        currentRow = person + ","
+        currentDict = counts[person]
+        if currentDict.has_key("posts") and currentDict['posts'] > 0:
+            currentRow = currentRow + str(currentDict['posts'])
+        else:
+            currentRow = currentRow + '0'
+        currentRow = currentRow + ","
+        if currentDict.has_key("comments") and currentDict['comments'] > 0:
+            currentRow = currentRow + str(currentDict['comments'])
+        else:
+            currentRow = currentRow + '0'
+        f.write(currentRow + "\n")
+    f.close
 
 # the following code runs your functions to make sure they work properly
 # uncomment all valid lines of python code to test your functions
 
 # read in and count contributions
-#contributions = contributorCounts("hw4feed.txt")
+#fname = "hw4feed.txt"
+#f = open(fname,'r')
+contributions = contributorCounts("hw4feed.txt")
 
 # print the human readable version
-#print '------'
-#printContributors(contributions)
+print '------'
+printContributors(contributions)
 
 # write the computer readable version
-#saveContributors(contributions, 'contribs.csv')
+saveContributors(contributions, 'contribs.csv')
 
 
 ######################################
@@ -99,7 +172,38 @@ def stripWordPunctuation(word):
 # .... and so on. That is, it's another nested dictionary. 
 #
 # uncomment the next line and define wordFreqs() there
-#def wordFreqs(fname):
+def checkStopWords(wordToCheck):
+    f = open('stopwords.txt', 'r')
+    currentBoolean = True #word okay to use
+    for word in f:
+        word = word.strip()
+        word = stripWordPunctuation(word).lower()
+        wordToCheck = stripWordPunctuation(wordToCheck).lower()
+        if word == wordToCheck:
+            currentBoolean = False #Word not okay to use
+    return currentBoolean
+
+def wordFreqs(fname):
+    f = open(fname,'r')
+    dict = {}
+    for line in f:
+        if isField("comment", line):
+            currentString = line[8:-1]
+            currentWords = currentString.split(" ")
+            for word in currentWords:
+                if checkStopWords(word) == True:
+                    word = stripWordPunctuation(word)
+                    dict[word] = dict.get(word, {})
+                    dict[word]["comments"] = dict[word].get("comments", 0) + 1
+        if isField("post", line):
+            currentString = line[5:-1]
+            currentWords = currentString.split(" ")
+            for word in currentWords:
+                if checkStopWords(word) == True:
+                    word = stripWordPunctuation(word)
+                    dict[word] = dict.get(word, {})
+                    dict[word]["posts"] = dict[word].get("posts", 0) + 1
+    return dict
 
 
 # Next, we will write your writeFreqs() function, which takes, as a parameter
@@ -112,8 +216,24 @@ def stripWordPunctuation(word):
 # them in either wordFreqs() or in writeFreqs(). The decision is up to you.
 # 
 # uncomment the next line and define writeFreqs() there.
-#def writeFreqs(freqdict):
+def writeFreqs(freqdict):
+    f=open('freqs.csv', 'w')
+    f.write("word, postcount, commentcount \n")
+    for word in freqdict:
+        currentRow = word + ","
+        currentDict = freqdict[word]
+        if currentDict.has_key("posts") and currentDict['posts'] > 0:
+            currentRow = currentRow + str(currentDict['posts'])
+        else:
+            currentRow = currentRow + '0'
+        currentRow = currentRow + ","
+        if currentDict.has_key("comments") and currentDict['comments'] > 0:
+            currentRow = currentRow + str(currentDict['comments'])
+        else:
+            currentRow = currentRow + '0'
+        f.write(currentRow + "\n")
+    f.close
 
 # finally, uncomment these two lines to test your functions    
-#fd = wordFreqs('hw4feed.txt')
-#writeFreqs(fd)
+fd = wordFreqs('hw4feed.txt')
+writeFreqs(fd)

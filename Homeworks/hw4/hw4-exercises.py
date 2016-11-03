@@ -34,6 +34,14 @@ dinosaurs= {}
 # try to do this without that assumption. 
 #
 # put your code here
+for dino in dinolist:
+    dinoType = dino[0]
+    currentDino = dino[1]
+    dinosaurs[dinoType] = dinosaurs.get(dinoType, {})
+    dinosaurs[dinoType][currentDino] = dinosaurs[dinoType].get(currentDino, 0) + 1
+
+
+
 
 print dinosaurs
 
@@ -59,21 +67,36 @@ print '=== 2a ==='
 # HINT: in methods, you can create default parameters, just like with functions.
 
 # uncomment the next line define your Book class there
-#class Book():
+class Book():
+    def __init__(self, title, author, year=None, publisher=None):
+        self.title = title
+        self.author = author
+        self.year = year
+        self.publisher = publisher
+
+    def cite(self):
+        myString = self.author + ". "
+        if self.year!=None:
+            myString = myString + "(" + str(self.year) + "). "
+        myString = myString + self.title + ". "
+        if self.publisher!=None:
+            myString = myString + self.publisher + ". "
+        return myString
+
 
 # you can uncomment the following lines to see if this works
 # you can compare the output with the output in the PDF
-#nudge = Book(title="Nudge",author="Thaler & Sunstein")
-#print nudge.title
-#print nudge.author
-#print nudge.year
-#print nudge.publisher
+nudge = Book(title="Nudge",author="Thaler & Sunstein")
+print nudge.title
+print nudge.author
+print nudge.year
+print nudge.publisher
 
-#nudge = Book(title="Nudge",author="Thaler & Sunstein",year=2008,publisher="Penguin")
-#print nudge.title
-#print nudge.author
-#print nudge.year
-#print nudge.publisher
+nudge = Book(title="Nudge",author="Thaler & Sunstein",year=2008,publisher="Penguin")
+print nudge.title
+print nudge.author
+print nudge.year
+print nudge.publisher
 
 print '=== 2b ==='
 # Now we will add a method to generate the citation. The method should be called "cite".
@@ -83,7 +106,7 @@ print '=== 2b ==='
 
 # Then, uncomment the next line to test. This should print the citation if you
 # have properly defined the Book.cite() method.
-#print nudge.cite()
+print nudge.cite()
 
 
 ### JSON 
@@ -98,20 +121,33 @@ print "--- 3a ---"
 ##1. load the JSON file 'hw4example.json', and convert it from a string to JSON.
 # Print its contents. It's a list of metadata about movies.
 ## after you are done, comment out the print statement (so it no longer prints)
+post = json.load(open('hw4example.json'))
+post = json.dumps(post)
+post = json.loads(post)
+#print post
 
 print "--- 3b ---"
 ##2. print the first element of the JSON file. it's metadata about a movie.
 ## after you are done, comment out this exercise (so it no longer prints)
+#print post[0]
 
 print "--- 3c ---"
 ##3. print the keys and values in the format key: value of the first element of the json file 
 #   (so the attributes of the first movie get printed).
 #   e.g., Title: Little Miss Sunshine
 #   Order does not matter
+firstKeys = post[0].keys()
+for key in firstKeys:
+    print key + ": " + post[0][key]
 
 print "--- 3d ---"
 ##4. write a *function* to print only the title, genres, and IMDB rating, and Metascore for a movie
 ### It should print these details in that order.
+def printImportant(movie):
+    print "Title: " + movie['Title']
+    print "Genre: " + movie['Genre']
+    print "imdbRating: " + movie['imdbRating']
+    print "Metascore: " + movie['Metascore']
 
 print "--- 3e ---"
 ##5. use the function from (3d) to print the data for each movie
@@ -120,16 +156,23 @@ print "--- 3e ---"
 #   You may be able to work  around this by using the template format of output we talked about (%s)
 #   or by using .encode('utf-8'), e.g., fixedstring = mystring.encode('utf-8'), where mystring is
 #   the problematic string.
+for movie in post:
+    printImportant(movie)
 
 print "--- 3facebook ---"
 #Now, we're going to switch to hw4fbpost.json. This file contains just one post and related comments from
 #the class facebook feed.
 #
 #Load the contents of hw4fbpost.json, convert it to a dictionary, and print the keys
-#
+post2 = json.load(open('hw4fbpost.json'))
+print post2.keys()
+
 print "--- 3g ---"
 # Print the URL for the picture in the message. 
+print post2['picture']
 
 print "--- 3h ---"
 # Write code to determine the total number of comments on the post and print it. 
 # Pay attention to types and the level of nesting in here.
+comments = post2['comments']
+print "Comments: " + str(len(comments['data']))

@@ -48,22 +48,23 @@ gap('building block 1')
 ## write code that extracts and prints the data associated with the 'from'
 ## key in mypost1
 #<your-code-here>
-
+print mypost1['from']
 
 ## write code that extracts and prints the name of the user who posted mypost1
 #<your-code-here>
-
+print mypost1['from']['name']
 
 ## write a function postPoster() that extracts and returns the short name of
 ## the post from a post dictionary. 
 ## Use the shortname function within your function.
 #<your-code-here>
-
+def postPoster(post):
+    return shortname(post['from']['name'])
 
 ## uncomment the following three lines to test
-#print postPoster(mypost1)
-#print postPoster(mypost2)
-#print postPoster(mypost3)
+print postPoster(mypost1)
+print postPoster(mypost2)
+print postPoster(mypost3)
 
 ####################
 ### Building block 2
@@ -91,10 +92,15 @@ print "Comment count:", len(mypost1['comments']['data'])
 ## write a function called postCommentCount() that extracts and
 ## returns the number of comments from a post dictionary.
 #<your-code-here>
+def postCommentCount(post):
+    if 'comments' in post:
+        return len(mypost1['comments']['data'])
+    else:
+        return 0
 
 ## uncomment the following two lines of code. they should print 1 and 0
-#print postCommentCount(mypost1)
-#print postCommentCount(mypost2)
+print postCommentCount(mypost1)
+print postCommentCount(mypost2)
 
 ### Building block 3
 # extracting like counts (this similar to comment counts, but
@@ -110,15 +116,21 @@ print pretty(mypost3['likes'])
 
 ## write code that gets the number of likes from mypost3
 #<your-code-here>
+mypost3Likes = len(mypost3['likes']['data'])
 
 ## write a function called postLikeCount() that extracts and
 ## returns the number of likes from a post dictionary
 ## if the dictionary does not contain any likes, it should return 0
 #<your-code-here>
+def postLikeCount(post):
+    if 'likes' in post:
+        return len(post['likes']['data'])
+    else:
+        return 0
 
 ## the following two lines should print 0 and 12 when uncommented
-#print postLikeCount(mypost1)
-#print postLikeCount(mypost3)
+print postLikeCount(mypost1)
+print postLikeCount(mypost3)
 
 ###########################
 ### Putting it all together
@@ -129,4 +141,5 @@ print pretty(mypost3['likes'])
 #   with one line per post
 gap("Task")
 #<your-code-here>
-
+for post in posts:
+    print postPoster(post) + " posted to the group and received " + str(postCommentCount(post)) + " comments and " + str(postLikeCount(post)) + " likes"
